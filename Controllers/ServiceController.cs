@@ -23,10 +23,8 @@ public class ServiceController : Controller
     public async Task<IActionResult> RemoveBack(Photo photo)
     {
         MultipartFormDataContent form = new MultipartFormDataContent();
-        HttpContent content = new StringContent("file");
-        form.Add(content, "file");
         var stream = photo.Image.OpenReadStream();
-        content = new StreamContent(stream);
+        var content = new StreamContent(stream);
         content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
         {
             Name = "file",
