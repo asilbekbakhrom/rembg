@@ -5,5 +5,5 @@ namespace RemoveBg.Models;
 public class Photo
 {
     [Required]
-    public IFormFile? Image { get; set; }
+    public List<IFormFile>? Images { get; set; }
 }

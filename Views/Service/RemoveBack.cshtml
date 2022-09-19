@@ -7,9 +7,9 @@
 			<hr />
 		</div>
         <div class="mb-3">
-			<label asp-for="Image"></label>
-			<input type="file" accept="image/*" asp-for="Image" class="form-control"/>
-			<span asp-validation-for="Image" class="text-danger"></span>
+			<label asp-for="Images"></label>
+			<input type="file" accept="image/*" asp-for="Images" class="form-control" multiple="multiple"/>
+			<span asp-validation-for="Images" class="text-danger"></span>
 		</div>
 		<button type="submit" class="btn btn-primary" style="width:150px">Remove</button>
 	</div>
