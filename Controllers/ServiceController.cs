@@ -1,3 +1,4 @@
+using System.Linq;
 using System.IO.Compression;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
@@ -9,14 +10,12 @@ public class ServiceController : Controller
 {
     private readonly ILogger<ServiceController> _logger;
     private readonly HttpClient _client;
-    private readonly IWebHostEnvironment _webHostEnvironment;
     private static List<Result>? results;
 
     public ServiceController(ILogger<ServiceController> logger, IWebHostEnvironment webHostEnvironment)
     {
         _logger = logger;
         _client = new HttpClient();
-        _webHostEnvironment = webHostEnvironment;
     }
 
     public IActionResult RemoveBack() => View();
@@ -41,8 +40,8 @@ public class ServiceController : Controller
             var response = await _client.PostAsync("http://localhost:5000/", form);
             var image = Convert.ToBase64String(await response.Content.ReadAsByteArrayAsync());
             photos.Add(new Result(){ Photo = "data:image/png;base64," + image });
-            FileInfo fi = new FileInfo(i.FileName);
-            var newFileName = Guid.NewGuid() + ".png";
+            //Zipga aloqador kodlar
+            var newFileName = i.FileName[..i.FileName.IndexOf('.')] + ".png";
             var path = folder + "/" + newFileName;
             using (var stream2 = new FileStream(path, FileMode.Create))
             {
@@ -52,8 +51,9 @@ public class ServiceController : Controller
 
         ZipFile.CreateFromDirectory(folder, Path.Combine(Environment.CurrentDirectory, $"images.zip"));
         Directory.Delete(folder, true);
-        
-        return File(System.IO.File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, $"images.zip")), "application/zip");
+        var zipFile = System.IO.File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, $"images.zip"));
+        System.IO.File.Delete(Path.Combine(Environment.CurrentDirectory, $"images.zip"));
+        return File(zipFile, "application/zip");
         return View("ResultPhoto", photos);
     }
 }
